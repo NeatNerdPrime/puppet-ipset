@@ -4,6 +4,8 @@
 # @param ensure Should the IP set be created or removed ?
 # @param type Type of IP set.
 # @param options IP set options.
+# @param silent If ``true``, no diff content is being shown or logged. 
+#   Useful for larget sets with lot of changes. Default: false
 # @param ignore_contents If ``true``, only the IP set declaration will be
 #   managed, but not its content.
 # @param keep_in_sync If ``true``, Puppet will update the IP set in the kernel
@@ -69,6 +71,8 @@ define ipset::set (
   Enum['present', 'absent'] $ensure = 'present',
   IPSet::Type $type = 'hash:ip',
   IPSet::Options $options = {},
+  # Do not show/log diff output of changed file content
+  Boolean $silent = false,
   # do not touch what is inside the set, just its header (properties)
   Boolean $ignore_contents = false,
   # keep definition file and in-kernel runtime state in sync
@@ -117,6 +121,7 @@ define ipset::set (
           mode    => '0640',
           content => "${new_set}\n",
           replace => !$ignore_contents,
+          show_diff => $silent,
         }
       }
       IPSet::Set::Puppet_URL: { # lint:ignore:unquoted_string_in_case
@@ -128,6 +133,7 @@ define ipset::set (
           mode    => '0640',
           source  => $set,
           replace => !$ignore_contents,
+          show_diff => $silent,
         }
       }
       IPSet::Set::File_URL: { # lint:ignore:unquoted_string_in_case
@@ -139,6 +145,7 @@ define ipset::set (
           mode    => '0640',
           source  => regsubst($set, '^.{7}', ''),
           replace => !$ignore_contents,
+          show_diff => $silent,
         }
       }
       String: {
@@ -150,6 +157,7 @@ define ipset::set (
           mode    => '0640',
           content => $set,
           replace => !$ignore_contents,
+          show_diff => $silent,
         }
       }
       default: {

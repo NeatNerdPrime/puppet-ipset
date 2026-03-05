@@ -72,7 +72,7 @@ define ipset::set (
   IPSet::Type $type = 'hash:ip',
   IPSet::Options $options = {},
   # Do not show/log diff output of changed file content
-  Boolean $silent = false,
+  Boolean $show_diff= false,
   # do not touch what is inside the set, just its header (properties)
   Boolean $ignore_contents = false,
   # keep definition file and in-kernel runtime state in sync

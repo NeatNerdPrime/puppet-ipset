@@ -190,7 +190,7 @@ The following parameters are available in the `ipset::set` defined type:
 * [`options`](#-ipset--set--options)
 * [`ignore_contents`](#-ipset--set--ignore_contents)
 * [`keep_in_sync`](#-ipset--set--keep_in_sync)
-* [`silent`](#-ipset--set--silent)
+* [`show_diff`](#-ipset--set--show_diff)
 
 ##### <a name="-ipset--set--set"></a>`set`
 
@@ -240,13 +240,12 @@ memory. If ``false``, it will only update the IP sets on the filesystem.
 
 Default value: `true`
 
-##### <a name="-ipset--set--silent"></a>`silent`
+##### <a name="-ipset--set--show_diff"></a>`show_diff`
 
 Data type: `Boolean`
 
-If ``true``, Puppet will not show and log the changes (show_diff) of the new and 
-previous ipset. Usefull for reducing the size of your Puppet logs. If ``false``, 
-it will show and log the difference between sets.
+show_diff If ``true``, no diff content is being shown or logged. 
+Useful for larget sets with lot of changes. Default: false
 
 Default value: `false`
 

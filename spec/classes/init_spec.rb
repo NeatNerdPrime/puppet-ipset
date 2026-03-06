@@ -41,32 +41,32 @@ describe 'ipset' do
             sets: {
               'basic-set-v4' => {
                 'set' => "['10.0.0.1', '10.0.0.2', '10.0.0.42']",
-                'type' => 'hash:net'
+                'type' => 'hash:net',
               },
               'basic-set-v6' => {
                 'set' => "['fc00::1/128', 'fc00::2/128', 'fc00::2/128']",
                 'type' => 'hash:net',
                 'options' => {
-                  'family' => 'inet6'
-                }
-              }
-            }
+                  'family' => 'inet6',
+                },
+              },
+            },
           }
         end
 
         it do
-          expect(subject).to contain_ipset__set('basic-set-v4'). \
-            with(
+          expect(subject).to contain_ipset__set('basic-set-v4')
+            .with(
               'set' => "['10.0.0.1', '10.0.0.2', '10.0.0.42']",
-              'type' => 'hash:net'
+              'type' => 'hash:net',
             )
-          expect(subject).to contain_ipset__set('basic-set-v6'). \
-            with(
+          expect(subject).to contain_ipset__set('basic-set-v6')
+            .with(
               'set' => "['fc00::1/128', 'fc00::2/128', 'fc00::2/128']",
               'type' => 'hash:net',
               'options' => {
-                'family' => 'inet6'
-              }
+                'family' => 'inet6',
+              },
             )
         end
       end
@@ -83,7 +83,7 @@ describe 'ipset' do
 
         it 'sets purge => true on the config directory' do
           is_expected.to contain_file('/etc/ipset.d').with(
-            'purge' => true
+            'purge' => true,
           )
         end
       end

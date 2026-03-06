@@ -11,32 +11,32 @@ end
 
 def check_file_set_header(name, attributes)
   it do
-    expect(subject).to contain_file("/etc/sysconfig/ipset.d/#{name}.hdr").
-      only_with({
+    expect(subject).to contain_file("/etc/sysconfig/ipset.d/#{name}.hdr")
+      .only_with({
         ensure: 'file',
         owner: 'root',
         group: 'root',
         mode: '0640',
-        notify: "Exec[sync_ipset_#{name}]"
+        notify: "Exec[sync_ipset_#{name}]",
       }.merge(attributes))
   end
 end
 
 def check_file_set_content(name, attributes)
   it do
-    expect(subject).to contain_file("/etc/sysconfig/ipset.d/#{name}.set").
-      with({ ensure: 'file' }.merge(attributes))
+    expect(subject).to contain_file("/etc/sysconfig/ipset.d/#{name}.set")
+      .with({ ensure: 'file' }.merge(attributes))
   end
 end
 
 def check_exec_sync(name, attributes)
   it do
-    expect(subject).to contain_exec("sync_ipset_#{name}").
-      with({
+    expect(subject).to contain_exec("sync_ipset_#{name}")
+      .with({
         path: ['/sbin', '/usr/sbin', '/bin', '/usr/bin', '/usr/local/bin', '/usr/local/sbin'],
-        require: ['Package[ipset]', 'File[/usr/local/bin/ipset_sync]']
-      }.merge(attributes)).
-      that_subscribes_to("File[/etc/sysconfig/ipset.d/#{name}.set]")
+        require: ['Package[ipset]', 'File[/usr/local/bin/ipset_sync]'],
+      }.merge(attributes))
+      .that_subscribes_to("File[/etc/sysconfig/ipset.d/#{name}.set]")
   end
 end
 
@@ -44,43 +44,43 @@ simple_test_cases = [
   [
     'array',
     ['10.0.0.1', '192.168.0.1'],
-    { content: "10.0.0.1\n192.168.0.1\n" }
+    { content: "10.0.0.1\n192.168.0.1\n" },
   ],
   [
     'string',
     "10.0.0.1\n192.168.0.1\n",
-    { content: "10.0.0.1\n192.168.0.1\n" }
+    { content: "10.0.0.1\n192.168.0.1\n" },
   ],
   [
     'puppet url',
     'puppet:///foo/bar',
-    { source: 'puppet:///foo/bar' }
+    { source: 'puppet:///foo/bar' },
   ],
   [
     'file url',
     'file:///foo/bar',
-    { source: '/foo/bar' }
+    { source: '/foo/bar' },
   ],
   [
     'array',
     ['10.0.0.1 #Comment 1', '192.168.0.1 #Comment 2'],
-    { content: "10.0.0.1 #Comment 1\n192.168.0.1 #Comment 2\n" }
+    { content: "10.0.0.1 #Comment 1\n192.168.0.1 #Comment 2\n" },
   ],
   [
     'array',
     ['10.0.0.1,80', '192.168.0.1,443'],
-    { content: "10.0.0.1,80\n192.168.0.1,443\n" }
+    { content: "10.0.0.1,80\n192.168.0.1,443\n" },
   ],
   [
     'string',
     ["10.0.0.1 #Comment 1\n192.168.0.1 #Comment 2"],
-    { content: "10.0.0.1 #Comment 1\n192.168.0.1 #Comment 2\n" }
+    { content: "10.0.0.1 #Comment 1\n192.168.0.1 #Comment 2\n" },
   ],
   [
     'string',
     ["10.0.0.1,80\n192.168.0.1,443"],
-    { content: "10.0.0.1,80\n192.168.0.1,443\n" }
-  ]
+    { content: "10.0.0.1,80\n192.168.0.1,443\n" },
+  ],
 ]
 
 # rubocop:disable RSpec/MultipleDescribes
@@ -99,25 +99,25 @@ describe 'ipset::set' do
           os: {
             family: 'RedHat',
             release: {
-              major: 7
-            }
+              major: 7,
+            },
           },
           systemd: true,
           service_provider: 'systemd',
           operatingsystem: 'RedHat',
-          osfamily: 'RedHat'
+          osfamily: 'RedHat',
         }
       end
 
       check_file_set_header(
         'simple',
-        content: "create simple hash:ip family inet hashsize 1024 maxelem 65536\n"
+        content: "create simple hash:ip family inet hashsize 1024 maxelem 65536\n",
       )
       check_file_set_content('simple', set_file_attributes)
       check_exec_sync(
         'simple',
         command: "ipset_sync -c '/etc/sysconfig/ipset.d'    -i simple",
-        unless: "ipset_sync -c '/etc/sysconfig/ipset.d' -d -i simple"
+        unless: "ipset_sync -c '/etc/sysconfig/ipset.d' -d -i simple",
       )
     end
   end
@@ -134,7 +134,7 @@ describe 'ipset::set' do
         set: ['10.0.0.0/8', '192.168.0.0/16'],
         type: 'hash:net',
         options: { hashsize: 2048 },
-        ignore_contents: true
+        ignore_contents: true,
       }
     end
     let :facts do
@@ -142,27 +142,27 @@ describe 'ipset::set' do
         os: {
           family: 'RedHat',
           release: {
-            major: 7
-          }
+            major: 7,
+          },
         },
         systemd: true,
-        service_provider: 'systemd'
+        service_provider: 'systemd',
       }
     end
 
     check_file_set_header(
       'custom',
-      content: "create custom hash:net family inet hashsize 2048 maxelem 65536\n"
+      content: "create custom hash:net family inet hashsize 2048 maxelem 65536\n",
     )
     check_file_set_content(
       'custom',
       content: "10.0.0.0/8\n192.168.0.0/16\n",
-      replace: false
+      replace: false,
     )
     check_exec_sync(
       'custom',
       command: "ipset_sync -c '/etc/sysconfig/ipset.d'    -i custom -n",
-      unless: "ipset_sync -c '/etc/sysconfig/ipset.d' -d -i custom -n"
+      unless: "ipset_sync -c '/etc/sysconfig/ipset.d' -d -i custom -n",
     )
   end
 end
@@ -179,7 +179,7 @@ describe 'ipset::set' do
     let :params do
       {
         ensure: 'absent',
-        set: ['10.0.0.0/8', '192.168.0.0/16']
+        set: ['10.0.0.0/8', '192.168.0.0/16'],
       }
     end
 
@@ -188,25 +188,25 @@ describe 'ipset::set' do
         os: {
           family: 'RedHat',
           release: {
-            major: 7
-          }
+            major: 7,
+          },
         },
         systemd: true,
-        service_provider: 'systemd'
+        service_provider: 'systemd',
       }
     end
 
     it do
-      expect(subject).to contain_file('/etc/sysconfig/ipset.d/absent.hdr').
-        with(ensure: 'absent')
-      expect(subject).to contain_file('/etc/sysconfig/ipset.d/absent.set').
-        with(ensure: 'absent')
-      expect(subject).to contain_exec('ipset destroy absent').
-        with(
+      expect(subject).to contain_file('/etc/sysconfig/ipset.d/absent.hdr')
+        .with(ensure: 'absent')
+      expect(subject).to contain_file('/etc/sysconfig/ipset.d/absent.set')
+        .with(ensure: 'absent')
+      expect(subject).to contain_exec('ipset destroy absent')
+        .with(
           path: ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
           command: 'ipset destroy absent',
           onlyif: 'ipset list absent',
-          require: 'Package[ipset]'
+          require: 'Package[ipset]',
         )
     end
   end
@@ -218,7 +218,7 @@ describe 'ipset::set' do
   let :params do
     {
       ensure: 'present',
-      set: ['10.0.0.0/8', '192.168.0.0/16']
+      set: ['10.0.0.0/8', '192.168.0.0/16'],
     }
   end
 
@@ -227,11 +227,11 @@ describe 'ipset::set' do
       os: {
         family: 'RedHat',
         release: {
-          major: 7
-        }
+          major: 7,
+        },
       },
       systemd: true,
-      service_provider: 'systemd'
+      service_provider: 'systemd',
     }
   end
 
@@ -256,17 +256,17 @@ describe 'ipset::unmanaged' do
         os: {
           family: 'RedHat',
           release: {
-            major: 7
-          }
+            major: 7,
+          },
         },
         systemd: true,
-        service_provider: 'systemd'
+        service_provider: 'systemd',
       }
     end
 
     it do
       expect(subject).to contain_ipset__set('unmanaged').with(
-        ignore_contents: true
+        ignore_contents: true,
       )
     end
   end

@@ -115,48 +115,48 @@ define ipset::set (
         $new_set = join($set, "\n")
         # create file with ipset, one record per line
         file { "${config_path}/${title}.set":
-          ensure  => file,
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0640',
-          content => "${new_set}\n",
-          replace => !$ignore_contents,
+          ensure    => file,
+          owner     => 'root',
+          group     => 'root',
+          mode      => '0640',
+          content   => "${new_set}\n",
+          replace   => !$ignore_contents,
           show_diff => $show_diff,
         }
       }
       IPSet::Set::Puppet_URL: { # lint:ignore:unquoted_string_in_case
         # passed as puppet file
         file { "${config_path}/${title}.set":
-          ensure  => file,
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0640',
-          source  => $set,
-          replace => !$ignore_contents,
+          ensure    => file,
+          owner     => 'root',
+          group     => 'root',
+          mode      => '0640',
+          source    => $set,
+          replace   => !$ignore_contents,
           show_diff => $show_diff,
         }
       }
       IPSet::Set::File_URL: { # lint:ignore:unquoted_string_in_case
         # passed as target node file
         file { "${config_path}/${title}.set":
-          ensure  => file,
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0640',
-          source  => regsubst($set, '^.{7}', ''),
-          replace => !$ignore_contents,
+          ensure    => file,
+          owner     => 'root',
+          group     => 'root',
+          mode      => '0640',
+          source    => regsubst($set, '^.{7}', ''),
+          replace   => !$ignore_contents,
           show_diff => $show_diff,
         }
       }
       String: {
         # passed directly as content string (from template for example)
         file { "${config_path}/${title}.set":
-          ensure  => file,
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0640',
-          content => $set,
-          replace => !$ignore_contents,
+          ensure    => file,
+          owner     => 'root',
+          group     => 'root',
+          mode      => '0640',
+          content   => $set,
+          replace   => !$ignore_contents,
           show_diff => $show_diff,
         }
       }

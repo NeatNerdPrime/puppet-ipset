@@ -188,9 +188,9 @@ The following parameters are available in the `ipset::set` defined type:
 * [`ensure`](#-ipset--set--ensure)
 * [`type`](#-ipset--set--type)
 * [`options`](#-ipset--set--options)
+* [`show_diff`](#-ipset--set--show_diff)
 * [`ignore_contents`](#-ipset--set--ignore_contents)
 * [`keep_in_sync`](#-ipset--set--keep_in_sync)
-* [`show_diff`](#-ipset--set--show_diff)
 
 ##### <a name="-ipset--set--set"></a>`set`
 
@@ -222,6 +222,15 @@ IP set options.
 
 Default value: `{}`
 
+##### <a name="-ipset--set--show_diff"></a>`show_diff`
+
+Data type: `Boolean`
+
+If ``true``, no diff content is being shown or logged.
+Useful for larget sets with lot of changes. Default: false
+
+Default value: `false`
+
 ##### <a name="-ipset--set--ignore_contents"></a>`ignore_contents`
 
 Data type: `Boolean`
@@ -239,15 +248,6 @@ If ``true``, Puppet will update the IP set in the kernel
 memory. If ``false``, it will only update the IP sets on the filesystem.
 
 Default value: `true`
-
-##### <a name="-ipset--set--show_diff"></a>`show_diff`
-
-Data type: `Boolean`
-
-show_diff If ``true``, no diff content is being shown or logged. 
-Useful for larget sets with lot of changes. Default: false
-
-Default value: `false`
 
 ### <a name="ipset--unmanaged"></a>`ipset::unmanaged`
 

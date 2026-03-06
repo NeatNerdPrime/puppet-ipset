@@ -48,11 +48,15 @@ Data type: `Array[String[1]]`
 
 The name of the package we want to install
 
+Default value: `['ipset']`
+
 ##### <a name="-ipset--service"></a>`service`
 
 Data type: `String[1]`
 
 The name of the service that we're going to manage
+
+Default value: `'ipset'`
 
 ##### <a name="-ipset--service_ensure"></a>`service_ensure`
 
@@ -60,11 +64,15 @@ Data type: `Boolean`
 
 Desired state of the service. If true, the service will be running. If false, the service will be stopped
 
+Default value: `true`
+
 ##### <a name="-ipset--enable"></a>`enable`
 
 Data type: `Boolean`
 
 Boolean to decide if we want to have the service in autostart or not
+
+Default value: `true`
 
 ##### <a name="-ipset--firewall_service"></a>`firewall_service`
 
@@ -80,11 +88,15 @@ Data type: `Enum['present', 'absent', 'latest']`
 
 ensure parameter for the ipset package resource
 
+Default value: `'present'`
+
 ##### <a name="-ipset--config_path"></a>`config_path`
 
 Data type: `Stdlib::Absolutepath`
 
 path to the directory for the ipsets
+
+Default value: `'/etc/ipset.d/'`
 
 ##### <a name="-ipset--purge_config_dir"></a>`purge_config_dir`
 

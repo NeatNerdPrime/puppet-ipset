@@ -4,6 +4,8 @@
 # @param ensure Should the IP set be created or removed ?
 # @param type Type of IP set.
 # @param options IP set options.
+# @param show_diff If ``true``, no diff content is being shown or logged. 
+#   Useful for larget sets with lot of changes. Default: false
 # @param ignore_contents If ``true``, only the IP set declaration will be
 #   managed, but not its content.
 # @param keep_in_sync If ``true``, Puppet will update the IP set in the kernel
@@ -69,6 +71,8 @@ define ipset::set (
   Enum['present', 'absent'] $ensure = 'present',
   IPSet::Type $type = 'hash:ip',
   IPSet::Options $options = {},
+  # Do not show/log diff output of changed file content
+  Boolean $show_diff= false,
   # do not touch what is inside the set, just its header (properties)
   Boolean $ignore_contents = false,
   # keep definition file and in-kernel runtime state in sync
@@ -111,45 +115,49 @@ define ipset::set (
         $new_set = join($set, "\n")
         # create file with ipset, one record per line
         file { "${config_path}/${title}.set":
-          ensure  => file,
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0640',
-          content => "${new_set}\n",
-          replace => !$ignore_contents,
+          ensure    => file,
+          owner     => 'root',
+          group     => 'root',
+          mode      => '0640',
+          content   => "${new_set}\n",
+          replace   => !$ignore_contents,
+          show_diff => $show_diff,
         }
       }
       IPSet::Set::Puppet_URL: { # lint:ignore:unquoted_string_in_case
         # passed as puppet file
         file { "${config_path}/${title}.set":
-          ensure  => file,
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0640',
-          source  => $set,
-          replace => !$ignore_contents,
+          ensure    => file,
+          owner     => 'root',
+          group     => 'root',
+          mode      => '0640',
+          source    => $set,
+          replace   => !$ignore_contents,
+          show_diff => $show_diff,
         }
       }
       IPSet::Set::File_URL: { # lint:ignore:unquoted_string_in_case
         # passed as target node file
         file { "${config_path}/${title}.set":
-          ensure  => file,
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0640',
-          source  => regsubst($set, '^.{7}', ''),
-          replace => !$ignore_contents,
+          ensure    => file,
+          owner     => 'root',
+          group     => 'root',
+          mode      => '0640',
+          source    => regsubst($set, '^.{7}', ''),
+          replace   => !$ignore_contents,
+          show_diff => $show_diff,
         }
       }
       String: {
         # passed directly as content string (from template for example)
         file { "${config_path}/${title}.set":
-          ensure  => file,
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0640',
-          content => $set,
-          replace => !$ignore_contents,
+          ensure    => file,
+          owner     => 'root',
+          group     => 'root',
+          mode      => '0640',
+          content   => $set,
+          replace   => !$ignore_contents,
+          show_diff => $show_diff,
         }
       }
       default: {

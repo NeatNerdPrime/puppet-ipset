@@ -200,6 +200,7 @@ The following parameters are available in the `ipset::set` defined type:
 * [`ensure`](#-ipset--set--ensure)
 * [`type`](#-ipset--set--type)
 * [`options`](#-ipset--set--options)
+* [`show_diff`](#-ipset--set--show_diff)
 * [`ignore_contents`](#-ipset--set--ignore_contents)
 * [`keep_in_sync`](#-ipset--set--keep_in_sync)
 
@@ -232,6 +233,15 @@ Data type: `IPSet::Options`
 IP set options.
 
 Default value: `{}`
+
+##### <a name="-ipset--set--show_diff"></a>`show_diff`
+
+Data type: `Boolean`
+
+If ``true``, no diff content is being shown or logged.
+Useful for larget sets with lot of changes. Default: false
+
+Default value: `false`
 
 ##### <a name="-ipset--set--ignore_contents"></a>`ignore_contents`
 
